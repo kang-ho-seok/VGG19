@@ -17,7 +17,7 @@ import torch.nn.functional as F
 import torchinfo
 from torchvision.models import vgg16, VGG16_Weights
 
-device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 class VGG_19(nn.Module):
     def __init__(self, num_classes = 1000, init_weights = True) -> None:
@@ -233,7 +233,7 @@ torch.manual_seed(56)
 np.random.seed(56)
 random.seed(56)
 
-Q = [256, 384, 512]
+Q = [224, 256, 288]
 mean = (0.485, 0.456, 0.406)
 std = (0.229, 0.224, 0.225)
 
@@ -318,12 +318,14 @@ for k_custom, v_custom in target_state_dict.items():
 
 model_state_dict.update(new_weights)
 
+# FC layer 가중치를 Conv layer로 변환하여 복사
 fc_layers = [pre_trained_model.classifier[0], pre_trained_model.classifier[3], pre_trained_model.classifier[6]]
 conv_layers = [model.denses[0], model.denses[2], model.denses[4]]
 
 for fc, conv in zip(fc_layers, conv_layers):
     conv.weight.data.copy_(fc.weight.data.view(conv.weight.shape))
     conv.bias.data.copy_(fc.bias.data)
+    
 model.load_state_dict(model_state_dict)
 
 # 마지막 레이어 교체
@@ -332,7 +334,7 @@ num_ftrs = model.denses[4].in_channels
 model.denses[4] = nn.Conv2d(in_channels=num_ftrs, out_channels=10, kernel_size=1, padding=1, stride=1)
 
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(model.parameters(), lr = 0.01, weight_decay=5e-4)
+optimizer = optim.SGD(model.parameters(), lr = 0.01, momentum=0.9, weight_decay=5e-4)
 #val_loss가 향상되지 않으면 lr을 1/10 줄임
 scheduler = ReduceLROnPlateau(optimizer, 'max', patience=1, factor=0.1)
 num_epochs =74#원래는 74
