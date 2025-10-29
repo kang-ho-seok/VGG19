@@ -39,7 +39,7 @@ class VGG_19(nn.Module):
             nn.ReLU(inplace=True),
             nn.Conv2d(in_channels=256, out_channels=256, kernel_size=3, padding=1, stride=1),
             nn.ReLU(inplace=True),
-            nn.Conv2d(in_channels=256, out_channels=256, kernel_size=3, padding=1, stride=1),
+            nn.Conv2d(in_channels=256, out_channels=256, kernel_size=3, padding=1, stride=1),#추가
             nn.ReLU(inplace=True),
             nn.MaxPool2d((2, 2), stride=2),
             nn.Conv2d(in_channels=256, out_channels=512, kernel_size=3, padding=1, stride=1),
@@ -48,7 +48,7 @@ class VGG_19(nn.Module):
             nn.ReLU(inplace=True),
             nn.Conv2d(in_channels=512, out_channels=512, kernel_size=3, padding=1, stride=1),
             nn.ReLU(inplace=True),
-            nn.Conv2d(in_channels=512, out_channels=512, kernel_size=3, padding=1, stride=1),
+            nn.Conv2d(in_channels=512, out_channels=512, kernel_size=3, padding=1, stride=1),#추가
             nn.ReLU(inplace=True),
             nn.MaxPool2d((2, 2), stride=2),
             nn.Conv2d(in_channels=512, out_channels=512, kernel_size=3, padding=1, stride=1),
@@ -57,7 +57,7 @@ class VGG_19(nn.Module):
             nn.ReLU(inplace=True),
             nn.Conv2d(in_channels=512, out_channels=512, kernel_size=3, padding=1, stride=1),
             nn.ReLU(inplace=True),
-            nn.Conv2d(in_channels=512, out_channels=512, kernel_size=3, padding=1, stride=1),
+            nn.Conv2d(in_channels=512, out_channels=512, kernel_size=3, padding=1, stride=1),#추가
             nn.ReLU(inplace=True),
             nn.MaxPool2d((2, 2), stride=2)
         )
@@ -366,3 +366,4 @@ plt.savefig('vgg19_train_val_loss_plot1.png')
 plt.show()
 #torchinfo.summary(model, input_size=(1, 3, 224, 224))
 test_acc, test_loss = test_model(model, test_dataloader, criterion, num_epochs=1)
+
